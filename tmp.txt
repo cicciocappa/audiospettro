@@ -1,0 +1,186 @@
+/*
+use rodio::{OutputStream, Source, source::SineWave};
+use std::time::Duration;
+
+fn main() {
+    // Open the default audio output device
+    let (_stream, stream_handle) = OutputStream::try_default().unwrap();
+
+    // Generate a 440 Hz sine wave for 2 seconds
+    let sine = SineWave::new(888.0).take_duration(Duration::from_millis(50));
+
+    // Play the tone
+    stream_handle.play_raw(sine.convert_samples()).unwrap();
+
+    // Wait for the tone to finish playing
+    std::thread::sleep(Duration::from_millis(150));
+}
+
+ */
+
+
+#[derive(Debug, PartialEq)]
+enum Pulse {
+    Short,
+    Long,
+}
+
+/// Represents a single character
+type Letter = Vec<Pulse>;
+
+/// Represents a string of characters
+type Message = Vec<Letter>;
+
+trait MorseCode {
+    fn to_morse_code(&self) -> Message;
+}
+
+impl std::fmt::Display for Pulse {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Pulse::Short => write!(f, "."),
+            Pulse::Long => write!(f, "_"),
+        }
+    }
+}
+
+fn print_morse_code(code: &Message) {
+    for letter in code.iter() {
+        for pulse in letter.iter() {
+            print!("{}", pulse);
+        };
+        print!(" ");
+    };
+    println!();
+}
+
+/*
+
+vec![Pulse::Short,Pulse::Long], 
+vec![Pulse::Long,Pulse::Short,Pulse::Short,Pulse::Short], 
+vec![Pulse::Long,Pulse::Short,Pulse::Long,Pulse::Short], 
+vec![Pulse::Long,Pulse::Short,Pulse::Short], 
+vec![Pulse::Short], 
+vec![Pulse::Short,Pulse::Short,Pulse::Long,Pulse::Short], 
+vec![Pulse::Long,Pulse::Long,Pulse::Short], 
+vec![Pulse::Short,Pulse::Short,Pulse::Short,Pulse::Short], 
+vec![Pulse::Short,Pulse::Short], 
+vec![Pulse::Short,Pulse::Long,Pulse::Long,Pulse::Long], 
+vec![Pulse::Long,Pulse::Short,Pulse::Long], 
+vec![Pulse::Short,Pulse::Long,Pulse::Short,Pulse::Short], 
+vec![Pulse::Long,Pulse::Long], 
+vec![Pulse::Long,Pulse::Short], 
+vec![Pulse::Long,Pulse::Long,Pulse::Long], 
+vec![Pulse::Short,Pulse::Long,Pulse::Long,Pulse::Short], 
+vec![Pulse::Long,Pulse::Long,Pulse::Short,Pulse::Long], 
+vec![Pulse::Short,Pulse::Long,Pulse::Short], 
+vec![Pulse::Short,Pulse::Short,Pulse::Short], 
+vec![Pulse::Long], 
+vec![Pulse::Short,Pulse::Short,Pulse::Long], 
+vec![Pulse::Short,Pulse::Short,Pulse::Short,Pulse::Long], 
+vec![Pulse::Short,Pulse::Long,Pulse::Long], 
+vec![Pulse::Long,Pulse::Short,Pulse::Short,Pulse::Long], 
+vec![Pulse::Long,Pulse::Short,Pulse::Long,Pulse::Long], 
+vec![Pulse::Long,Pulse::Long,Pulse::Short,Pulse::Short], 
+vec![Pulse::Long,Pulse::Long,Pulse::Long,Pulse::Long,Pulse::Long], 
+vec![Pulse::Short,Pulse::Long,Pulse::Long,Pulse::Long,Pulse::Long], 
+vec![Pulse::Short,Pulse::Short,Pulse::Long,Pulse::Long,Pulse::Long], 
+vec![Pulse::Short,Pulse::Short,Pulse::Short,Pulse::Long,Pulse::Long], 
+vec![Pulse::Short,Pulse::Short,Pulse::Short,Pulse::Short,Pulse::Long], 
+vec![Pulse::Short,Pulse::Short,Pulse::Short,Pulse::Short,Pulse::Short], 
+vec![Pulse::Long,Pulse::Short,Pulse::Short,Pulse::Short,Pulse::Short], 
+vec![Pulse::Long,Pulse::Long,Pulse::Short,Pulse::Short,Pulse::Short], 
+vec![Pulse::Long,Pulse::Long,Pulse::Long,Pulse::Short,Pulse::Short], 
+vec![Pulse::Long,Pulse::Long,Pulse::Long,Pulse::Long,Pulse::Short,]
+
+*/
+
+impl MorseCode for String  {
+    fn to_morse_code(&self) -> Message {
+        let mut out = Vec::new();
+        for l in self.to_lowercase().chars() {
+            out.push(
+            match l {
+                'a' => vec![Pulse::Long, Pulse::Short],
+                'b' => vec![Pulse::Long, Pulse::Short, Pulse::Short, Pulse::Short],
+                'c' => vec![Pulse::Long,Pulse::Short,Pulse::Long,Pulse::Short],
+                'd' => vec![Pulse::Long,Pulse::Short,Pulse::Short],
+                'e' => vec![Pulse::Short],
+                'f' => vec![Pulse::Short,Pulse::Short,Pulse::Long,Pulse::Short],
+                'g' => vec![Pulse::Long,Pulse::Long,Pulse::Short],
+                'h' => vec![Pulse::Short,Pulse::Short,Pulse::Short,Pulse::Short], 
+                'i' =>vec![Pulse::Short,Pulse::Short], 
+                'j' =>vec![Pulse::Short,Pulse::Long,Pulse::Long,Pulse::Long], 
+                'k' =>vec![Pulse::Long,Pulse::Short,Pulse::Long], 
+                'l' =>vec![Pulse::Short,Pulse::Long,Pulse::Short,Pulse::Short], 
+                'm' =>vec![Pulse::Long,Pulse::Long], 
+                'n' =>vec![Pulse::Long,Pulse::Short], 
+                'o' =>vec![Pulse::Long,Pulse::Long,Pulse::Long], 
+                'p' =>vec![Pulse::Short,Pulse::Long,Pulse::Long,Pulse::Short], 
+                'q' =>vec![Pulse::Long,Pulse::Long,Pulse::Short,Pulse::Long], 
+                'r' =>vec![Pulse::Short,Pulse::Long,Pulse::Short], 
+                's' =>vec![Pulse::Short,Pulse::Short,Pulse::Short], 
+                't' =>vec![Pulse::Long], 
+                'u' =>vec![Pulse::Short,Pulse::Short,Pulse::Long], 
+                'v' =>vec![Pulse::Short,Pulse::Short,Pulse::Short,Pulse::Long], 
+                'w' =>vec![Pulse::Short,Pulse::Long,Pulse::Long], 
+                'x' =>vec![Pulse::Long,Pulse::Short,Pulse::Short,Pulse::Long], 
+                'y' =>vec![Pulse::Long,Pulse::Short,Pulse::Long,Pulse::Long], 
+                'z' =>vec![Pulse::Long,Pulse::Long,Pulse::Short,Pulse::Short], 
+                '0' =>vec![Pulse::Long,Pulse::Long,Pulse::Long,Pulse::Long,Pulse::Long], 
+                '1' =>vec![Pulse::Short,Pulse::Long,Pulse::Long,Pulse::Long,Pulse::Long], 
+                '2' =>vec![Pulse::Short,Pulse::Short,Pulse::Long,Pulse::Long,Pulse::Long], 
+                '3' =>vec![Pulse::Short,Pulse::Short,Pulse::Short,Pulse::Long,Pulse::Long], 
+                '4' =>vec![Pulse::Short,Pulse::Short,Pulse::Short,Pulse::Short,Pulse::Long], 
+                '5' =>vec![Pulse::Short,Pulse::Short,Pulse::Short,Pulse::Short,Pulse::Short], 
+                '6' =>vec![Pulse::Long,Pulse::Short,Pulse::Short,Pulse::Short,Pulse::Short], 
+                '7' =>vec![Pulse::Long,Pulse::Long,Pulse::Short,Pulse::Short,Pulse::Short], 
+                '8' =>vec![Pulse::Long,Pulse::Long,Pulse::Long,Pulse::Short,Pulse::Short], 
+                '9' =>vec![Pulse::Long,Pulse::Long,Pulse::Long,Pulse::Long,Pulse::Short],
+                _ => continue,
+            });
+        }
+        out
+    }
+}
+
+fn main() {
+    let greeting = "Hello, world"
+        .to_string()
+        .to_morse_code();
+    
+    print_morse_code(&greeting);
+}
+
+
+ 
+
+#[test]
+fn hello_world() {
+    use Pulse::*;
+
+    let expected = vec![
+        vec![Short, Short, Short, Short],
+        vec![Short],
+        vec![Short, Long, Short, Short],
+        vec![Short, Long, Short, Short],
+        vec![Long, Long, Long],
+        vec![Short, Long, Long],
+        vec![Long, Long, Long],
+        vec![Short, Long, Short],
+        vec![Short, Long, Short, Short],
+        vec![Long, Short, Short],
+    ];
+
+    let actual = "Hello, world".to_string().to_morse_code();
+    assert_eq!(actual, expected);
+}
+
+#[test]
+fn whole_alphabet() {
+    let alphabet = "abcdefghijklmnopqrstuvwxyz1234567890".to_string();
+
+    alphabet.to_morse_code();
+    alphabet.to_uppercase().to_morse_code();
+}
+     
